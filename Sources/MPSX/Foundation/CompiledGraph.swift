@@ -209,4 +209,14 @@ public extension MPSCompiledGraph {
 
         let _: [String: MPSGraphTensorData] = self(randomInputs, in: commandBuffer)
     }
+
+    func specialize(with mpsDevice: MPSGraphDevice) {
+        self.executable.specialize(
+            with: mpsDevice,
+            inputTypes: graph.placeholderTensors.map({
+                MPSGraphShapedType(shape: $0.shape, dataType: $0.dataType)
+            }),
+            compilationDescriptor: compilationDescriptor
+        )
+    }
 }
